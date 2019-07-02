@@ -3,8 +3,10 @@
 <ul>
   {{#each tshirts}}
   <li>
-    {{this.name}} - {{this.price}} - {{this._owner}}<br>
-    <img src="{{this.pictureUrl}}" alt="">
+    {{this.name}} - {{this.price}} - {{this._owner.username}}<br>
+    <img src="{{this.pictureUrl}}" alt=""> <br>
+    <a href="/admin/validate-tshirt/{{this._id}}">Validate</a>
+    <a href="/admin/remove-tshirt/{{this._id}}">Remove</a> <br> <br>
   </li>
   {{/each}}
 </ul>
