@@ -15,13 +15,18 @@
   {{!-- TODO: Display "Logout" only if connected --}}
   <nav>
     <a href="/">Home</a>
-    <a href="/auth/login">Login</a>
-    <a href="/auth/signup">Signup</a>
-    <a href="/auth/logout">Logout</a>
     <a href="/tshirts">All tshirts</a>
-    <a href="/add-tshirt">Add t-shirt</a>
-    <a href="/my-tshirts">My t-shirts</a>
-    <a href="/admin/pending-tshirts">Pending t-shirts</a>
+    {{#if user}}
+      <a href="/auth/logout">Logout</a>
+      <a href="/add-tshirt">Add t-shirt</a>
+      <a href="/my-tshirts">My t-shirts</a>
+    {{else}}
+      <a href="/auth/login">Login</a>
+      <a href="/auth/signup">Signup</a>
+    {{/if}}
+    {{#ifEquals user.role "ADMIN"}}
+      <a href="/admin/pending-tshirts">Pending t-shirts</a>
+    {{/ifEquals}}
   </nav>
 
 

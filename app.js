@@ -58,6 +58,15 @@ hbs.registerHelper('ifUndefined', (value, options) => {
       return options.fn(this);
   }
 });
+
+// New HBS helper: {{#ifEquals value1 value2}}.....{{/ifEquals}}
+hbs.registerHelper("ifEquals", (value1, value2, options) => {
+  if (value1 === value2) {
+    return options.fn(this);
+  } else {
+    return options.inverse(this);
+  }
+});
   
 
 // default value for title local
@@ -74,6 +83,11 @@ app.use(session({
 app.use(flash());
 require('./passport')(app);
     
+app.use((req,res,next) => {
+  // Define a view variable named "user" that contains info about the connected user (or undefined if not connected)
+  res.locals.user = req.user 
+  next()
+})
 
 app.use('/', require('./routes/index'));
 app.use('/admin', require('./routes/admin'));
