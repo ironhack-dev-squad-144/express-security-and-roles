@@ -1,0 +1,10 @@
+<h1>Pending T-shirts</h1>
+
+<ul>
+  {{#each tshirts}}
+  <li>
+    {{this.name}} - {{this.price}} - {{this._owner}}<br>
+    <img src="{{this.pictureUrl}}" alt="">
+  </li>
+  {{/each}}
+</ul>
