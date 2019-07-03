@@ -3,15 +3,16 @@ const LocalStrategy = require('passport-local').Strategy;
 const User          = require('../models/User');
 const bcrypt        = require('bcrypt');
 
+// The Strategy is executed when the user submits the login form
 passport.use(new LocalStrategy({
-    usernameField: 'username',
-    passwordField: 'password'
+    usernameField: 'username', // The 1st parameter is req.body.username
+    passwordField: 'password' // The 2nd parameter is req.body.password
   }, 
   (username, password, done) => {
     User.findOne({ username })
     .then(foundUser => {
       if (!foundUser) {
-        done(null, false, { message: 'Incorrect username' });
+        done(null, false, { message: 'Incorrect username' }); // Define a req.flash("error")
         return;
       }
 

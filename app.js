@@ -82,11 +82,13 @@ app.use(session({
 }))
 app.use(flash());
 require('./passport')(app);
-    
+
+// Define our own middleware that is executed everytime, before the routes
 app.use((req,res,next) => {
   // Define a view variable named "user" that contains info about the connected user (or undefined if not connected)
-  res.locals.user = req.user 
-  next()
+  res.locals.user = req.user ;
+  console.log("TCL: req.user", req.user);
+  next();
 })
 
 app.use('/', require('./routes/index'));

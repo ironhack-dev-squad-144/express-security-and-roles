@@ -1,5 +1,5 @@
 const express = require("express");
-const passport = require('passport');
+const passport = require("passport");
 const router = express.Router();
 const User = require("../models/User");
 
@@ -7,33 +7,41 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const bcryptSalt = 10;
 
-
+// Route to render the login form
 router.get("/login", (req, res, next) => {
-  res.render("auth/login", { "message": req.flash("error") });
+  res.render("auth/login", { message: req.flash("error") });
 });
 
-router.post("/login", passport.authenticate("local", {
-  successRedirect: "/",
-  failureRedirect: "/auth/login",
-  failureFlash: true,
-  passReqToCallback: true
-}));
+// Route for the login form submission => use passport local strategy
+router.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/auth/login",
+    failureFlash: true,
+    passReqToCallback: true
+  })
+);
 
+// Route to render the signup form
 router.get("/signup", (req, res, next) => {
-  res.render("auth/signup");
+  res.render("auth/signup", { message: req.flash("error") }); // Get a flash "error"
 });
 
+// Route to handle the signup form
 router.post("/signup", (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
   if (username === "" || password === "") {
-    res.render("auth/signup", { message: "Indicate username and password" });
+    req.flash("error", "Indicate username and password"); // Set a flash "error"
+    res.redirect("/auth/signup"); // http://localhost:3000/auth/signup
     return;
   }
 
   User.findOne({ username }, "username", (err, user) => {
     if (user !== null) {
-      res.render("auth/signup", { message: "The username already exists" });
+      req.flash("error", "The username already exists");
+      res.redirect("/auth/signup");
       return;
     }
 
@@ -45,13 +53,18 @@ router.post("/signup", (req, res, next) => {
       password: hashPass
     });
 
-    newUser.save()
-    .then(() => {
-      res.redirect("/");
-    })
-    .catch(err => {
-      res.render("auth/signup", { message: "Something went wrong" });
-    })
+    newUser
+      .save()
+      .then(() => {
+        // To log in the user (he doesn't need to log in after signing up)
+        req.login(newUser, () => {
+          res.redirect("/");
+        });
+      })
+      .catch(err => {
+        req.flash("error", "Something went wrong");
+        res.redirect("/auth/signup");
+      });
   });
 });
 

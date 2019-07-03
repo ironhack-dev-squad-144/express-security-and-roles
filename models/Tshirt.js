@@ -4,7 +4,7 @@ const Schema   = mongoose.Schema
 
 const tshirtSchema = new Schema({
   name: String,
-  pictureUrl: String,
+  pictureUrl: Schema.Types.String,
   price: { 
     type: Number,
     min: 0
